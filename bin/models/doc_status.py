@@ -1,5 +1,3 @@
-from typing import Self
-
 from entsoe import mappings
 from loguru import logger
 from sqlalchemy import Column, Integer, String
@@ -19,7 +17,7 @@ class DocStatus(DbModel.Model):
         return f"DocStatus code={self.code}, DocStatus type={self.type}"
 
     @staticmethod
-    def generate() -> list[Self]:
+    def generate() -> list:
         objects_list = []
         logger.debug("Generowanie obiektów DocStatus")
         for k, v in mappings.PSRTYPE_MAPPINGS.items():

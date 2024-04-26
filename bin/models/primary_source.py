@@ -1,5 +1,3 @@
-from typing import Self
-
 from entsoe import mappings
 from loguru import logger
 from sqlalchemy import Column, Integer, String
@@ -19,7 +17,7 @@ class Psr(DbModel.Model):
         return f"PSR code={self.code}, PSR type={self.type}"
 
     @staticmethod
-    def generate() -> list[Self]:
+    def generate() -> list:
         objects_list = []
         logger.debug("Generowanie obiektów PSR")
         for k, v in mappings.PSRTYPE_MAPPINGS.items():

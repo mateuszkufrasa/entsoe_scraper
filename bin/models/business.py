@@ -1,5 +1,3 @@
-from typing import Self
-
 from entsoe import mappings
 from loguru import logger
 from sqlalchemy import Column, Integer, String
@@ -19,7 +17,7 @@ class Bsn(DbModel.Model):
         return f"BSN code={self.code}, BSN type={self.src_type}"
 
     @staticmethod
-    def generate() -> list[Self]:
+    def generate() -> list:
         objects_list = []
         logger.debug("Generowanie obiektów BSN")
         for k, v in mappings.BSNTYPE.items():
