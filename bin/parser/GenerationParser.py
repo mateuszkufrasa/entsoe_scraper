@@ -1,6 +1,6 @@
 import pandas as pd
 
-from bin.models.Generation import Generation
+from bin.models.generation import Generation
 
 
 class GenerationParser:

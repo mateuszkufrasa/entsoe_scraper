@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, DateTime, String
 
-from bin.models.DbModel import DbModel
+from bin.models.db_model import DbModel
 
 
 class AllocatedCapacity(DbModel.Model):

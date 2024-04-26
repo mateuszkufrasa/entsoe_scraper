@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from bin.models.DbModel import DbModel
+from bin.models.db_model import DbModel
 
 
 class Zone(DbModel.Model):
