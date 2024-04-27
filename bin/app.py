@@ -44,10 +44,10 @@ with app.app_context():
     DbUtils.update_in_db(objs=process_types, db_session=DbModel.session)
 
     # bidding zones
-    for a in Area:
-        new_zone = Zone(zone_name=a.name, code=a.code, meaning=a.meaning, tz_=a.tz, value=a.value)
-        # TODO: update list of zones
+    bid_zones = Zone.generate()
+    DbUtils.update_in_db(objs=bid_zones,db_session=DbModel.session)
 
+    for a in Area:
         logger.info(f"pobieranie danych: {a.name}...")
         generations = ActualGeneration.get_data(a.name, days_back_from=-5, days_back_to=-2, config=config)
         if generations:
