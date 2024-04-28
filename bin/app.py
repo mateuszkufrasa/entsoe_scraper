@@ -12,6 +12,7 @@ from bin.models.mkt_agreement import MktAgreement
 from bin.models.primary_source import Psr
 from bin.models.process_type import ProcessType
 from bin.models.zone import Zone
+from bin.models.zone_neighbours import ZoneNeighbours
 from bin.parser.GenerationParser import GenerationParser
 from bin.utils.db import DbUtils
 
@@ -24,28 +25,32 @@ logger.add('basic_log.log')
 
 with app.app_context():
     DbModel.create_all()
-    # uncomment if need for mappings update
+
+    # insert/update mappings
     psr_types = Psr.generate()
-    DbUtils.update_in_db(objs=psr_types, db_session=DbModel.session)
+    Psr.insert_or_update(items=psr_types)
 
     bsn_types = Bsn.generate()
-    DbUtils.update_in_db(objs=bsn_types, db_session=DbModel.session)
+    Bsn.insert_or_update(items=bsn_types)
 
     mkt_agreeements = MktAgreement.generate()
-    DbUtils.update_in_db(objs=mkt_agreeements, db_session=DbModel.session)
+    MktAgreement.insert_or_update(items=mkt_agreeements)
 
     doc_statuses = DocStatus.generate()
-    DbUtils.update_in_db(objs=doc_statuses, db_session=DbModel.session)
+    DocStatus.insert_or_update(items=doc_statuses)
 
     doc_types = DocType.generate()
-    DbUtils.update_in_db(objs=doc_types, db_session=DbModel.session)
+    DocType.insert_or_update(items=doc_types)
 
     process_types = ProcessType.generate()
-    DbUtils.update_in_db(objs=process_types, db_session=DbModel.session)
+    ProcessType.insert_or_update(items=process_types)
 
     # bidding zones
     bid_zones = Zone.generate()
-    DbUtils.update_in_db(objs=bid_zones,db_session=DbModel.session)
+    Zone.insert_or_update(items=bid_zones)
+
+    bid_zones_neighbours = ZoneNeighbours.generate(bid_zones)
+    ZoneNeighbours.insert_or_update(items=bid_zones_neighbours)
 
     for a in Area:
         logger.info(f"pobieranie danych: {a.name}...")

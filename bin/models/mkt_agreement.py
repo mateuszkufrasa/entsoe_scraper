@@ -25,3 +25,21 @@ class MktAgreement(DbModel.Model):
             objects_list.append(item)
         logger.debug(f"Liczba wygenerowanych obiektów: {len(objects_list)}")
         return objects_list
+
+    @staticmethod
+    def insert_or_update(items: list) -> None:
+        logger.info(f"Aktualizacja obiektów MktAgreement w bazie")
+        try:
+            for i in items:
+                res = DbModel.session.query(MktAgreement).filter(MktAgreement.code == i.code).first()
+                if res:
+                    res.code = i.code
+                    res.type = i.type
+                    DbModel.session.commit()
+                    DbModel.session.flush()
+                else:
+                    logger.info(f"Nowy rekord: {i}")
+                    DbModel.session.merge(i)
+                    DbModel.session.commit()
+        except Exception as e:
+            logger.error(e)

@@ -11,7 +11,7 @@ class DbUtils:
         try:
             for i in objs:
                 db_session.merge(i)
-            db_session.commit()
+                db_session.commit()
             logger.success("Zapis obiektów w bazie udany")
         except Exception as e:
             logger.error(e)

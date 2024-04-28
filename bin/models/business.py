@@ -14,7 +14,7 @@ class Bsn(DbModel.Model):
     type = Column(String)
 
     def __repr__(self):
-        return f"BSN code={self.code}, BSN type={self.src_type}"
+        return f"BSN code={self.code}, BSN type={self.type}"
 
     @staticmethod
     def generate() -> list:
@@ -25,3 +25,21 @@ class Bsn(DbModel.Model):
             objects_list.append(item)
         logger.debug(f"Liczba wygenerowanych obiektów: {len(objects_list)}")
         return objects_list
+
+    @staticmethod
+    def insert_or_update(items: list) -> None:
+        logger.info(f"Aktualizacja obiektów Bsn w bazie")
+        try:
+            for i in items:
+                res = DbModel.session.query(Bsn).filter(Bsn.code == i.code).first()
+                if res:
+                    res.code = i.code
+                    res.type = i.type
+                    DbModel.session.commit()
+                    DbModel.session.flush()
+                else:
+                    logger.info(f"Nowy rekord: {i}")
+                    DbModel.session.merge(i)
+                    DbModel.session.commit()
+        except Exception as e:
+            logger.error(e)
