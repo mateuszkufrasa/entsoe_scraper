@@ -9,7 +9,7 @@ venv/
 rsp.xml
 bin/credentials.json
 bin/basic_log.log
-
+.idea/
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

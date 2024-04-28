@@ -3,10 +3,18 @@ from flask import Flask
 from loguru import logger
 
 from bin.config.Config import Config
-from bin.models.DbModel import DbModel
-from bin.models.Generation import ActualGeneration
-from bin.models.Zone import Zone
+from bin.models.business import Bsn
+from bin.models.db_model import DbModel
+from bin.models.doc_status import DocStatus
+from bin.models.doc_type import DocType
+from bin.models.generation import ActualGeneration
+from bin.models.mkt_agreement import MktAgreement
+from bin.models.primary_source import Psr
+from bin.models.process_type import ProcessType
+from bin.models.zone import Zone
+from bin.models.zone_neighbours import ZoneNeighbours
 from bin.parser.GenerationParser import GenerationParser
+from bin.utils.db import DbUtils
 
 config: Config = Config()
 d = utils.check_new_area_codes()  # TODO: sprawdzenie i aktualizacja bid zone
@@ -18,9 +26,33 @@ logger.add('basic_log.log')
 with app.app_context():
     DbModel.create_all()
 
-    for a in Area:
-        new_zone = Zone(zone_name=a.name,code=a.code,meaning=a.meaning,tz_=a.tz,value=a.value)
+    # insert/update mappings
+    psr_types = Psr.generate()
+    Psr.insert_or_update(items=psr_types)
 
+    bsn_types = Bsn.generate()
+    Bsn.insert_or_update(items=bsn_types)
+
+    mkt_agreeements = MktAgreement.generate()
+    MktAgreement.insert_or_update(items=mkt_agreeements)
+
+    doc_statuses = DocStatus.generate()
+    DocStatus.insert_or_update(items=doc_statuses)
+
+    doc_types = DocType.generate()
+    DocType.insert_or_update(items=doc_types)
+
+    process_types = ProcessType.generate()
+    ProcessType.insert_or_update(items=process_types)
+
+    # bidding zones
+    bid_zones = Zone.generate()
+    Zone.insert_or_update(items=bid_zones)
+
+    bid_zones_neighbours = ZoneNeighbours.generate(bid_zones)
+    ZoneNeighbours.insert_or_update(items=bid_zones_neighbours)
+
+    for a in Area:
         logger.info(f"pobieranie danych: {a.name}...")
         generations = ActualGeneration.get_data(a.name, days_back_from=-5, days_back_to=-2, config=config)
         if generations:
@@ -34,4 +66,3 @@ with app.app_context():
                 DbModel.session.commit()
         else:
             pass
-

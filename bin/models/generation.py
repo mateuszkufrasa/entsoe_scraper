@@ -9,7 +9,7 @@ from requests import HTTPError
 from urllib3.exceptions import ReadTimeoutError
 
 from bin.config.Config import Config
-from bin.models.DbModel import DbModel
+from bin.models.db_model import DbModel
 
 
 class Generation(DbModel.Model):
