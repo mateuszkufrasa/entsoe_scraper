@@ -20,7 +20,7 @@ class ProcessType(DbModel.Model):
     def generate() -> list:
         objects_list = []
         logger.debug("Generowanie obiektów ProcessType")
-        for k, v in mappings.PSRTYPE_MAPPINGS.items():
+        for k, v in mappings.PROCESSTYPE.items():
             item = ProcessType(code=k, type=v)
             objects_list.append(item)
         logger.debug(f"Liczba wygenerowanych obiektów: {len(objects_list)}")
@@ -35,8 +35,8 @@ class ProcessType(DbModel.Model):
                 if res:
                     res.code = i.code
                     res.type = i.type
+                    DbModel.session.merge(res)
                     DbModel.session.commit()
-                    DbModel.session.flush()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)

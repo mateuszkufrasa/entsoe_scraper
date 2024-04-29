@@ -35,8 +35,8 @@ class Bsn(DbModel.Model):
                 if res:
                     res.code = i.code
                     res.type = i.type
+                    DbModel.session.merge(res)
                     DbModel.session.commit()
-                    DbModel.session.flush()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)

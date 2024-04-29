@@ -14,8 +14,8 @@ class Zone(DbModel.Model):
     id = Column(Integer, primary_key=True)
     zone_name = Column(String)
     code = Column(String)
-    meaning = Column(String)
-    tz_ = Column(String)
+    meaning = Column(String, nullable=True)
+    tz_ = Column(String, nullable=True)
 
     def __repr__(self):
         return f"Zone zone_name={self.zone_name}, code={self.code}, meaning={self.meaning}, tz={self.tz_}"
@@ -41,8 +41,8 @@ class Zone(DbModel.Model):
                     res.code = i.code
                     res.meaning = i.meaning
                     res.tz_ = i.tz_
+                    DbModel.session.merge(res)
                     DbModel.session.commit()
-                    DbModel.session.flush()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)

@@ -45,8 +45,8 @@ class ZoneNeighbours(DbModel.Model):
                     res.zone_symbol = i.zone_symbol
                     res.zone_id = i.zone_id
                     res.neighbour_id = i.neighbour_id
+                    DbModel.session.merge(res)
                     DbModel.session.commit()
-                    DbModel.session.flush()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
