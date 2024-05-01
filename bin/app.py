@@ -5,6 +5,7 @@ from loguru import logger
 from bin.config.Config import Config
 from bin.models.business import Bsn
 from bin.models.calendar import Calendar
+from bin.models.country import Country
 from bin.models.db_model import DbModel
 from bin.models.doc_status import DocStatus
 from bin.models.doc_type import DocType
@@ -46,6 +47,9 @@ with app.app_context():
     process_types = ProcessType.generate()
     ProcessType.insert_or_update(items=process_types)
 
+    countries = Country.generate()
+    Country.insert_or_update(items=countries)
+
     bid_zones = Zone.generate()
     Zone.insert_or_update(items=bid_zones)
 
@@ -54,6 +58,9 @@ with app.app_context():
 
     dates = Calendar.generate(dt_from=config.dt_start,dt_to=config.dt_stop,tz_name=config.local_tz)
     Calendar.insert_or_update(items=dates)
+
+
+    #TODO: generate table with EU countries, correlate with bid zones and generate list of holidays
 
     # for a in Area:
     #     logger.info(f"pobieranie danych: {a.name}...")

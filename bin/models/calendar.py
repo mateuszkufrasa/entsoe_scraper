@@ -8,7 +8,6 @@ from sqlalchemy import Column, Integer, DateTime, String
 from bin.models.db_model import DbModel
 
 
-# TODO: generate calendar with id, utc, local_time, frequency: 15 min up to year ahead
 class Calendar(DbModel.Model):
     __tablename__ = 'Calendar'
     __table_args__ = {"schema": "dbo"}
@@ -39,7 +38,7 @@ class Calendar(DbModel.Model):
         return dts
 
     @staticmethod
-    #TODO: optimize
+    # TODO: optimize
     def insert_or_update(items: list) -> None:
         logger.info(f"Aktualizacja obiektów Calendar w bazie")
         try:

@@ -1,8 +1,9 @@
 from entsoe import Area, mappings
 from loguru import logger
-from sqlalchemy import Column, Integer, String, select
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
+from bin.models.country import Country
 from bin.models.db_model import DbModel
 from bin.models.zone_neighbours import ZoneNeighbours
 
@@ -15,18 +16,25 @@ class Zone(DbModel.Model):
     zone_name = Column(String)
     code = Column(String)
     meaning = Column(String, nullable=True)
-    tz_ = Column(String, nullable=True)
+    # tz_ = Column(String, nullable=True)
+    country_id = Column(Integer, ForeignKey('dbo.ENTSOE_countries.id'))
+
+    country = relationship('Country', backref='neighbouring_zones', foreign_keys=[country_id])
 
     def __repr__(self):
-        return f"Zone zone_name={self.zone_name}, code={self.code}, meaning={self.meaning}, tz={self.tz_}"
+        return f"Zone zone_name={self.zone_name}, code={self.code}, meaning={self.meaning}"
 
     @staticmethod
     def generate() -> list:
         objects_list = []
         logger.debug("Generowanie obiektów Zone")
         for a in Area:
-            item = Zone(zone_name=a.name, code=a.code, meaning=a.meaning, tz_=a.tz)
-            objects_list.append(item)
+            try:
+                country = DbModel.session.query(Country).filter(Country.tz_==a.tz).one()
+                item = Zone(zone_name=a.name, code=a.code, meaning=a.meaning,country_id=country.id)
+                objects_list.append(item)
+            except Exception:
+                logger.error(f"Brak kraju dla strefy {a.tz}")
         logger.debug(f"Liczba wygenerowanych obiektów: {len(objects_list)}")
         return objects_list
 
@@ -40,13 +48,12 @@ class Zone(DbModel.Model):
                     res.zone_name = i.zone_name
                     res.code = i.code
                     res.meaning = i.meaning
-                    res.tz_ = i.tz_
+                    # res.tz_ = i.tz_
                     DbModel.session.merge(res)
-                    DbModel.session.commit()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
-                    DbModel.session.commit()
+            DbModel.session.commit()
         except Exception as e:
             logger.error(e)
 
@@ -62,3 +69,4 @@ class Zone(DbModel.Model):
         else:
             logger.warning(f"Brak strefy {self.zone_name} w zbiorze danych")
         return out
+
