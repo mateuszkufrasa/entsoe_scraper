@@ -16,18 +16,17 @@ class Zone(DbModel.Model):
     zone_name = Column(String)
     code = Column(String)
     meaning = Column(String, nullable=True)
-    # tz_ = Column(String, nullable=True)
     country_id = Column(Integer, ForeignKey('dbo.ENTSOE_countries.id'))
 
     country = relationship('Country', backref='neighbouring_zones', foreign_keys=[country_id])
 
     def __repr__(self):
-        return f"Zone zone_name={self.zone_name}, code={self.code}, meaning={self.meaning}"
+        return f"{self.__class__.__name__} zone_name={self.zone_name}, code={self.code}, meaning={self.meaning}"
 
     @staticmethod
     def generate() -> list:
         objects_list = []
-        logger.debug("Generowanie obiektów Zone")
+        logger.debug(f"Generowanie obiektów {__class__.__name__}")
         for a in Area:
             try:
                 country = DbModel.session.query(Country).filter(Country.tz_==a.tz).one()

@@ -10,6 +10,7 @@ from bin.models.db_model import DbModel
 from bin.models.doc_status import DocStatus
 from bin.models.doc_type import DocType
 from bin.models.generation import ActualGeneration
+from bin.models.holiday import Holiday
 from bin.models.mkt_agreement import MktAgreement
 from bin.models.primary_source import Psr
 from bin.models.process_type import ProcessType
@@ -56,11 +57,11 @@ with app.app_context():
     bid_zones_neighbours = ZoneNeighbours.generate(bid_zones)
     ZoneNeighbours.insert_or_update(items=bid_zones_neighbours)
 
-    dates = Calendar.generate(dt_from=config.dt_start,dt_to=config.dt_stop,tz_name=config.local_tz)
+    dates = Calendar.generate(dt_from=config.dt_start, dt_to=config.dt_stop, tz_name=config.local_tz)
     Calendar.insert_or_update(items=dates)
 
-
-    #TODO: generate table with EU countries, correlate with bid zones and generate list of holidays
+    holidays = Holiday.generate()
+    Holiday.insert_or_update(items=holidays)
 
     # for a in Area:
     #     logger.info(f"pobieranie danych: {a.name}...")

@@ -34,7 +34,7 @@ class ActualGeneration:
         dtss = pd.date_range(start=n, end=n1, freq='D', normalize=True, tz=config.local_tz).tolist()
         it = peekable(iter(dtss))
         lst = []
-        # TODO: podzielić na wątki + obsługa wyjątków
+        # TODO: multiprocessing
         threads = []
         with ThreadPoolExecutor(max_workers=20) as executor:
             for x in it:

@@ -14,7 +14,7 @@ class MktAgreement(DbModel.Model):
     type = Column(String)
 
     def __repr__(self):
-        return f"MktAgreement code={self.code}, MktAgreement type={self.type}"
+        return f"{self.__class__.__name__} code={self.code}, MktAgreement type={self.type}"
 
     @staticmethod
     def generate() -> list:
@@ -28,7 +28,7 @@ class MktAgreement(DbModel.Model):
 
     @staticmethod
     def insert_or_update(items: list) -> None:
-        logger.info(f"Aktualizacja obiektów MktAgreement w bazie")
+        logger.info(f"Aktualizacja obiektów {__class__.__name__} w bazie")
         try:
             for i in items:
                 res = DbModel.session.query(MktAgreement).filter(MktAgreement.code == i.code).first()
@@ -36,10 +36,9 @@ class MktAgreement(DbModel.Model):
                     res.code = i.code
                     res.type = i.type
                     DbModel.session.merge(res)
-                    DbModel.session.commit()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
-                    DbModel.session.commit()
+            DbModel.session.commit()
         except Exception as e:
             logger.error(e)

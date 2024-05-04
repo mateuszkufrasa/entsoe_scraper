@@ -14,12 +14,12 @@ class DocType(DbModel.Model):
     type = Column(String)
 
     def __repr__(self):
-        return f"DocType code={self.code}, DocType type={self.type}"
+        return f"{self.__class__.__name__} code={self.code}, DocType type={self.type}"
 
     @staticmethod
     def generate() -> list:
         objects_list = []
-        logger.debug("Generowanie obiektów DocType")
+        logger.debug(f"Generowanie obiektów {__class__.__name__}")
         for k, v in mappings.DOCUMENTTYPE.items():
             item = DocType(code=k, type=v)
             objects_list.append(item)
@@ -28,7 +28,7 @@ class DocType(DbModel.Model):
 
     @staticmethod
     def insert_or_update(items: list) -> None:
-        logger.info(f"Aktualizacja obiektów DocType w bazie")
+        logger.info(f"Aktualizacja obiektów {__class__.__name__} w bazie")
         try:
             for i in items:
                 res = DbModel.session.query(DocType).filter(DocType.code == i.code).first()
@@ -36,10 +36,9 @@ class DocType(DbModel.Model):
                     res.code = i.code
                     res.type = i.type
                     DbModel.session.merge(res)
-                    DbModel.session.commit()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
-                    DbModel.session.commit()
+            DbModel.session.commit()
         except Exception as e:
             logger.error(e)
