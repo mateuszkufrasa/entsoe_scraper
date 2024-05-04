@@ -1,4 +1,10 @@
 # ENTSOE scraper
+![Static Badge](https://img.shields.io/badge/Code-Python-blue)
+![Static Badge](https://img.shields.io/badge/Code-T_SQL-blue)
+
+![Static Badge](https://img.shields.io/badge/Tools-Flask-green)
+![Static Badge](https://img.shields.io/badge/Tools-Git-green)
+![Static Badge](https://img.shields.io/badge/Tools-SQL_Alchemy-green)
 
 This ongoing project is intended for getting open-source electricity market data in Europe, published
 by [ENTSOE Transparency Platform](https://transparency.entsoe.eu/dashboard/show) with emphasis on day-ahead and
