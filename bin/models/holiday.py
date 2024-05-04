@@ -34,7 +34,7 @@ class Holiday(DbModel.Model):
     def generate() -> list:
         logger.debug(f"Generowanie obiektów {__class__.__name__}")
         out = []
-        stmt = exists().where(Calendar.id == Holiday.dt_utc_id)
+        stmt = exists().where(Calendar.id == Holiday.dt_utc_id)  # TODO: dodać warunek dot. strefy
         res = DbModel.session.query(Calendar).filter(~stmt).all()
         countries = DbModel.session.query(Country).all()
         if res:
@@ -50,8 +50,6 @@ class Holiday(DbModel.Model):
                             else:
                                 new_item = Holiday(country_id=c.id, zone_id=z.id, dt_utc_id=i.id, holiday=False)
                             out.append(new_item)
-                        break
-                    break
         return out
 
     @staticmethod
@@ -60,7 +58,8 @@ class Holiday(DbModel.Model):
         logger.info(f"Aktualizacja obiektów {__class__.__name__} w bazie")
         try:
             for i in items:
-                res = DbModel.session.query(Holiday).filter(Holiday.zone==i.zone).filter(Holiday.dt_utc == i.dt_utc).first()
+                res = DbModel.session.query(Holiday).filter(Holiday.zone == i.zone).filter(
+                    Holiday.dt_utc == i.dt_utc).first()
                 if not res:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)

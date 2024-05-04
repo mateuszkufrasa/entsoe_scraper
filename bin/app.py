@@ -60,6 +60,7 @@ with app.app_context():
     dates = Calendar.generate(dt_from=config.dt_start, dt_to=config.dt_stop, tz_name=config.local_tz)
     Calendar.insert_or_update(items=dates)
 
+    #TODO: rearrange holidays: save holiday datetimes for each country
     holidays = Holiday.generate()
     Holiday.insert_or_update(items=holidays)
 
