@@ -31,10 +31,10 @@ class ActualGeneration:
     def get_data(country_code: str, days_back_from: int, days_back_to: int, config: Config) -> list[str]:
         n = datetime.datetime.now() + datetime.timedelta(days=days_back_from)
         n1 = datetime.datetime.now() + datetime.timedelta(days=days_back_to)
-        dtss = pd.date_range(start=n, end=n1, freq='D', normalize=True, tz=config.to_zone).tolist()
+        dtss = pd.date_range(start=n, end=n1, freq='D', normalize=True, tz=config.local_tz).tolist()
         it = peekable(iter(dtss))
         lst = []
-        # TODO: podzielić na wątki + obsługa wyjątków
+        # TODO: multiprocessing
         threads = []
         with ThreadPoolExecutor(max_workers=20) as executor:
             for x in it:

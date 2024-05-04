@@ -14,13 +14,13 @@ class ProcessType(DbModel.Model):
     type = Column(String)
 
     def __repr__(self):
-        return f"ProcessType code={self.code}, ProcessType type={self.type}"
+        return f"{self.__class__.__name__} code={self.code}, ProcessType type={self.type}"
 
     @staticmethod
     def generate() -> list:
         objects_list = []
-        logger.debug("Generowanie obiektów ProcessType")
-        for k, v in mappings.PSRTYPE_MAPPINGS.items():
+        logger.debug(f"Generowanie obiektów {__class__.__name__}")
+        for k, v in mappings.PROCESSTYPE.items():
             item = ProcessType(code=k, type=v)
             objects_list.append(item)
         logger.debug(f"Liczba wygenerowanych obiektów: {len(objects_list)}")
@@ -28,18 +28,17 @@ class ProcessType(DbModel.Model):
 
     @staticmethod
     def insert_or_update(items: list) -> None:
-        logger.info(f"Aktualizacja obiektów ProcessType w bazie")
+        logger.info(f"Aktualizacja obiektów {__class__.__name__} w bazie")
         try:
             for i in items:
                 res = DbModel.session.query(ProcessType).filter(ProcessType.code == i.code).first()
                 if res:
                     res.code = i.code
                     res.type = i.type
-                    DbModel.session.commit()
-                    DbModel.session.flush()
+                    DbModel.session.merge(res)
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
-                    DbModel.session.commit()
+            DbModel.session.commit()
         except Exception as e:
             logger.error(e)

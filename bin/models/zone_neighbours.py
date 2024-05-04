@@ -18,12 +18,12 @@ class ZoneNeighbours(DbModel.Model):
     zone_p = relationship('Zone', backref='zone_parent', foreign_keys=[zone_id])
 
     def __repr__(self):
-        return f"ZoneNeighbour: zone_symbol={self.zone_symbol}, zone_id={self.zone_id}, neighbour_id={self.neighbour_id}"
+        return f"{__class__.__name__}: zone_symbol={self.zone_symbol}, zone_id={self.zone_id}, neighbour_id={self.neighbour_id}"
 
     @staticmethod
     def generate(zones: list) -> list:
         objects_list = []
-        logger.debug("Generowanie obiektów ZoneNeighbours")
+        logger.debug(f"Generowanie obiektów {__class__.__name__}")
         for bz in zones:
             bz = DbModel.session.query(bz.__class__).filter(bz.__class__.zone_name == bz.zone_name).first()
             if bz:
@@ -35,7 +35,7 @@ class ZoneNeighbours(DbModel.Model):
 
     @staticmethod
     def insert_or_update(items: list) -> None:
-        logger.info(f"Aktualizacja obiektów ZoneNeighbours w bazie")
+        logger.info(f"Aktualizacja obiektów {__class__.__name__} w bazie")
         try:
             for i in items:
                 res = DbModel.session.query(ZoneNeighbours).\
@@ -45,8 +45,8 @@ class ZoneNeighbours(DbModel.Model):
                     res.zone_symbol = i.zone_symbol
                     res.zone_id = i.zone_id
                     res.neighbour_id = i.neighbour_id
+                    DbModel.session.merge(res)
                     DbModel.session.commit()
-                    DbModel.session.flush()
                 else:
                     logger.info(f"Nowy rekord: {i}")
                     DbModel.session.merge(i)
