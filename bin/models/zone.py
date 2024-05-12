@@ -63,8 +63,9 @@ class Zone(DbModel.Model):
             neighbouring_zones = mappings.NEIGHBOURS.get(self.zone_name)
             for n in neighbouring_zones:
                 res = DbModel.session.query(Zone).filter(Zone.zone_name == n).first()
-                nzone = ZoneNeighbours(zone_id=self.id, zone_symbol=self.zone_name, neighbour_id=res.id)
-                out.append(nzone)
+                if res:
+                    nzone = ZoneNeighbours(zone_id=self.id, zone_symbol=self.zone_name, neighbour_id=res.id)
+                    out.append(nzone)
         else:
             logger.warning(f"Brak strefy {self.zone_name} w zbiorze danych")
         return out

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta, timezone, time
+from datetime import datetime, timedelta, time
 
 import pytz
 from dateutil.tz import tz
@@ -21,6 +21,8 @@ class Config:
         self.from_zone = tz.tzutc()
         self.dt_start = datetime(2024, 1, 1, 0, 00, tzinfo=self.from_zone)
         self.dt_stop = Config._default_dt_stop(datetime.now() + timedelta(weeks=1))
+        self.market='DAYAHEAD'
+        self.history=True
         self.server = r'DESKTOP-GU0D16O\MYSQLSERVER1'
         self.dbname = 'ENERGIA-TST'
         self.dblink = f'mssql+pyodbc://{self.server}/{self.dbname}?driver=ODBC+Driver+17+for+SQL+Server'

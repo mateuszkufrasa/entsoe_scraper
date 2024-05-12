@@ -13,7 +13,7 @@ from bin.models.db_model import DbModel
 
 
 class Generation(DbModel.Model):
-    __tablename__ = 'ENTSOE_Generation'
+    __tablename__ = 'ENTSOE_generation'
     __table_args__ = {"schema": "dbo"}
 
     id = DbModel.Column('Id', DbModel.Integer, primary_key=True)
@@ -55,6 +55,6 @@ class ActualGeneration:
             for task in as_completed(threads):
                 try:
                     lst.append(task.result())
-                except:
+                except Exception:
                     pass
         return lst
